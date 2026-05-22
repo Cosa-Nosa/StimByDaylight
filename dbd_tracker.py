@@ -243,7 +243,7 @@ async def run_dbd_tracker():
                     match_end_cooldown_until = current_time + MATCH_END_COOLDOWN_S
                     # Keep any timed result vibes (like escape); clear continuous toggles
                     vibe_manager.clear_vibes_matching_regex(
-                        r"^(in_chase|repairing|healing_self|healing_other|injured|on_hook|unhooking)$"
+                        r"^(in_chase|repairing|repairing_toolbox|healing_self|healing_other|injured|on_hook|unhooking)$"
                     )
 
                 if event == sg.WIN_CLOSED or event == "Quit":
