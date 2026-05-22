@@ -73,6 +73,13 @@ class DBDStateTracker:
             self.rising[name] = False
             self.falling[name] = False
             self._confirm[name] = 0
+        # Reset digit_state runtime to per-event initial values
+        for name, spec in self.event_registry.items():
+            if spec.type == "digit_state":
+                self.digit_state[name] = spec.initial
+                self.digit_state_previous[name] = None
+                self._digit_state_candidate[name] = None
+                self._digit_state_candidate_count[name] = 0
         self.outcome = None
         self.is_in_match = True
 
@@ -84,7 +91,8 @@ class DBDStateTracker:
         self.is_in_match = False
 
     # ── Per-frame update ───────────────────────────────────────────────────
-def refresh(self):
+
+    def refresh(self):
         self.dbdcv.capture_frame()
         if self.dbdcv.frame is None:
             return
@@ -142,8 +150,7 @@ def refresh(self):
                 elif spec.action == "end_match":
                     self.is_in_match = False
 
-
-def _refresh_digit_state(self, name: str, spec):
+    def _refresh_digit_state(self, name: str, spec):
         """
         Match every sub-template in spec.states, pick the highest-confidence winner,
         gate transitions with confirm_frames + debounce_s.
@@ -187,19 +194,3 @@ def _refresh_digit_state(self, name: str, spec):
             if prev is not None and best_state < prev:
                 self.digit_state_decremented[name] = True
             self._last_fired[name] = self.current_time
-
-def reset_for_new_match(self):
-        for name in self.event_registry:
-            self.state[name] = False
-            self.rising[name] = False
-            self.falling[name] = False
-            self._confirm[name] = 0
-        # Reset digit_state runtime to per-event initial values
-        for name, spec in self.event_registry.items():
-            if spec.type == "digit_state":
-                self.digit_state[name] = spec.initial
-                self.digit_state_previous[name] = None
-                self._digit_state_candidate[name] = None
-                self._digit_state_candidate_count[name] = 0
-        self.outcome = None
-        self.is_in_match = True
